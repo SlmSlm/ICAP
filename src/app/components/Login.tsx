@@ -1,6 +1,8 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { logIn } from "../api/api";
 import Input from "./Input";
 
 export interface IForm {
@@ -9,8 +11,14 @@ export interface IForm {
 }
 
 export default function Login() {
+  const router = useRouter();
+
   const [form, setForm] = useState<IForm>({ username: "", password: "" });
   const [errors, setErrors] = useState<IForm>({ username: "", password: "" });
+
+  const hasErrors = Object.values(form).some(
+    (field) => field === "" || field === null || field === undefined
+  );
 
   const handleFormChange = (fieldName: string, value: string) => {
     setForm({ ...form, [fieldName]: value });
@@ -41,7 +49,21 @@ export default function Login() {
     }
   };
 
-  const hasErrors = Object.values(errors).some((error) => !!error);
+  const signIn = async () => {
+    // default:{
+    //   "username": "testuser",
+    //   "password": "testpassword123"
+    // }
+
+    if (!hasErrors) {
+      try {
+        await logIn("/api/login/", form);
+        router.push("/table");
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
 
   return (
     <>
@@ -58,7 +80,7 @@ export default function Login() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" method="POST">
             <Input
               target="username"
               type="text"
@@ -76,13 +98,13 @@ export default function Login() {
 
             <div>
               <button
-                type="submit"
                 disabled={hasErrors}
                 className={`flex w-full justify-center rounded-md py-2 text-sm font-semibold leading-6 text-white shadow-sm ${
                   hasErrors
                     ? "bg-indigo-600 bg-opacity-50 text-opacity-50 cursor-not-allowed"
                     : "bg-indigo-600 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 }`}
+                onClick={() => signIn()}
               >
                 Sign in
               </button>
