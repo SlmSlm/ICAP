@@ -7,6 +7,15 @@ const api: AxiosInstance = axios.create({
   baseURL: BASE_URL,
 });
 
+export const getTable = async (endpoint: string): Promise<any> => {
+  try {
+    const response: AxiosResponse<any> = await api.get(endpoint);
+    return response.data;
+  } catch (error: any) {
+    throw error;
+  }
+};
+
 export const logIn = async (endpoint: string, data: IForm): Promise<any> => {
   try {
     const response: AxiosResponse<any> = await api.post(endpoint, data);

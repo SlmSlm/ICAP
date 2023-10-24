@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* body{
+  background: #000;
+  color: aliceblue;
+} */
+
 @keyframes pulsate {
     0% {
       border-color: red;
