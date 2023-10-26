@@ -2,10 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { logIn } from "../api/api";
-import Input from "./Input";
-import { validateInput } from "../utils/inputValidator";
 import { IErrors } from "../types/interfaces";
+import { validateInput } from "../utils/inputValidator";
+import Input from "./Input";
 
 export interface IForm {
   username: string;
@@ -27,7 +29,8 @@ export default function Login() {
     setErrors({ ...errors, [fieldName]: validateInput(fieldName, value) });
   };
 
-  const signIn = async () => {
+  const signIn = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     // default:{
     //   "username": "testuser",
     //   "password": "testpassword123"
@@ -38,7 +41,7 @@ export default function Login() {
         await logIn("/api/login/", form);
         router.push("/table");
       } catch (e) {
-        console.error(e);
+        throw e;
       }
     }
   };
@@ -58,7 +61,7 @@ export default function Login() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" method="POST">
+          <form onSubmit={(e) => signIn(e)} className="space-y-6">
             {Object.keys(form).map((fieldName) => (
               <Input
                 target={fieldName}
@@ -74,12 +77,12 @@ export default function Login() {
             <div>
               <button
                 disabled={hasErrors}
+                type="submit"
                 className={`flex w-full justify-center rounded-md py-2 text-sm font-semibold leading-6 text-white shadow-sm ${
                   hasErrors
                     ? "bg-indigo-600 bg-opacity-50 text-opacity-50 cursor-not-allowed"
                     : "bg-indigo-600 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 }`}
-                onClick={() => signIn()}
               >
                 Sign in
               </button>
@@ -87,6 +90,7 @@ export default function Login() {
           </form>
         </div>
       </div>
+      <ToastContainer position="top-right" autoClose={5000} />
     </>
   );
 }

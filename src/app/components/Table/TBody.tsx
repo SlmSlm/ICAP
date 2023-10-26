@@ -4,7 +4,7 @@ import { convertDateFormat } from "@/app/utils/convertDateFormat";
 import { validateInput } from "@/app/utils/inputValidator";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import EditIcon from "../../../public/img/edit.svg";
+import EditIcon from "../../public/img/edit.svg";
 import Input from "../Input";
 
 interface IProps {

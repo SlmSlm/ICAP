@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
+import { toast } from "react-toastify";
 import { IForm } from "../components/Login";
 import { IDataItem } from "../types/interfaces";
 
@@ -19,7 +20,7 @@ export const getTable = async (endpoint: string): Promise<any> => {
 
 export const patchTable = async (
   endpoint: string,
-  body: IDataItem 
+  body: IDataItem
 ): Promise<any> => {
   try {
     const response: AxiosResponse<any> = await api.patch(endpoint, body);
@@ -34,8 +35,7 @@ export const logIn = async (endpoint: string, data: IForm): Promise<any> => {
     const response: AxiosResponse<any> = await api.post(endpoint, data);
     return response.data;
   } catch (error: any) {
-    alert(`Oooops... 
-    User is ${error.response.statusText} :(`);
+    toast.error(`${error.response.statusText}. Ooops, user doesn't exist`);
     throw error;
   }
 };
