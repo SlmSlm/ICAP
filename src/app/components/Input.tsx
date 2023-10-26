@@ -19,7 +19,7 @@ const Input: React.FC<IInputProps> = ({
       </label>
     )}
 
-    <div className="mt-2">
+    <div>
       <input
         id={target}
         name={target}

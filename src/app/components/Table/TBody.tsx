@@ -98,7 +98,7 @@ const TBody = (props: IProps) => {
                       key={key}
                       className="px-6 py-4 whitespace-no-wrap text-gray-500"
                     >
-                      <div className="flex justify-between">
+                      <div className="flex justify-between items-center">
                         {editedCell.row === rowIndex &&
                         editedCell.col === key ? (
                           <>
@@ -113,7 +113,7 @@ const TBody = (props: IProps) => {
                             />
                             <button
                               onClick={() => handleSave(item.id)}
-                              className="text-indigo-600"
+                              className="flex p-2 ml-2 justify-center rounded-md py-2 text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                               disabled={!!errors[key]}
                             >
                               Save
