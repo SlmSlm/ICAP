@@ -2,24 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { getTable } from "../api/api";
-
-interface IData {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: IDataItem[];
-}
-
-interface IDataItem {
-  id: number;
-  name: string;
-  email: string;
-  birthday_date: string;
-  phone_number: string;
-  address: string;
-}
+import TBody from "../components/Table/TBody";
+import THead from "../components/Table/THead";
+import { IData, ITableItems } from "../types/interfaces";
 
 const Table = () => {
+  const tableItems: ITableItems = {
+    name: "name",
+    email: "email",
+    birthday_date: "birthday date",
+    phone_number: "phone number",
+    address: "address",
+  };
   const [data, setData] = useState<IData>();
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -39,48 +33,8 @@ const Table = () => {
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
-        <thead>
-          <tr>
-            <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              Name
-            </th>
-            <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              Email
-            </th>
-            <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              Birthday
-            </th>
-            <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              Phone number
-            </th>
-            <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              Address
-            </th>
-          </tr>
-        </thead>
-        {data?.results.map((i, index) => {
-          return (
-            <tbody className="bg-white divide-y divide-gray-200" key={index}>
-              <tr>
-                <td className="px-6 py-4 whitespace-no-wrap text-gray-500">
-                  {i.name}
-                </td>
-                <td className="px-6 py-4 whitespace-no-wrap text-gray-500">
-                  {i.email}
-                </td>
-                <td className="px-6 py-4 whitespace-no-wrap text-gray-500">
-                  {i.birthday_date}
-                </td>
-                <td className="px-6 py-4 whitespace-no-wrap text-gray-500">
-                  {i.phone_number}
-                </td>
-                <td className="px-6 py-4 whitespace-no-wrap text-gray-500">
-                  {i.address}
-                </td>
-              </tr>
-            </tbody>
-          );
-        })}
+        <THead tableItems={tableItems} />
+        <TBody data={data} tableItems={tableItems} />
       </table>
 
       <div className="flex justify-center mt-4">

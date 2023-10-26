@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { logIn } from "../api/api";
 import Input from "./Input";
+import { validateInput } from "../utils/inputValidator";
+import { IErrors } from "../types/interfaces";
 
 export interface IForm {
   username: string;
@@ -14,7 +16,7 @@ export default function Login() {
   const router = useRouter();
 
   const [form, setForm] = useState<IForm>({ username: "", password: "" });
-  const [errors, setErrors] = useState<IForm>({ username: "", password: "" });
+  const [errors, setErrors] = useState<IErrors>({ username: "", password: "" });
 
   const hasErrors = Object.values(form).some(
     (field) => field === "" || field === null || field === undefined
@@ -22,31 +24,7 @@ export default function Login() {
 
   const handleFormChange = (fieldName: string, value: string) => {
     setForm({ ...form, [fieldName]: value });
-    validateInput(fieldName, value);
-  };
-
-  const validateInput = (fieldName: string, value: string) => {
-    if (fieldName === "username") {
-      if (value.length < 1 || value.length > 150) {
-        setErrors({
-          ...errors,
-          username: "Username should contain 1-150 characters",
-        });
-      } else {
-        setErrors({ ...errors, username: "" });
-      }
-    }
-
-    if (fieldName === "password") {
-      if (value.length < 1 || value.length > 128) {
-        setErrors({
-          ...errors,
-          password: "Password should contain 1-128 characters",
-        });
-      } else {
-        setErrors({ ...errors, password: "" });
-      }
-    }
+    setErrors({ ...errors, [fieldName]: validateInput(fieldName, value) });
   };
 
   const signIn = async () => {
@@ -81,20 +59,17 @@ export default function Login() {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" method="POST">
-            <Input
-              target="username"
-              type="text"
-              value={form.username}
-              errors={errors}
-              handleChange={handleFormChange}
-            />
-            <Input
-              target="password"
-              type="password"
-              value={form.password}
-              errors={errors}
-              handleChange={handleFormChange}
-            />
+            {Object.keys(form).map((fieldName) => (
+              <Input
+                target={fieldName}
+                type={fieldName === "password" ? "password" : "text"}
+                value={form[fieldName as keyof IForm]}
+                errors={errors}
+                handleChange={handleFormChange}
+                labelIsNeeded={true}
+                key={fieldName}
+              />
+            ))}
 
             <div>
               <button
