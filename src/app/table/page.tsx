@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { getTable } from "../api/api";
+import Preloader from "../components/Preloader/Preloader";
 import TBody from "../components/Table/TBody";
 import THead from "../components/Table/THead";
 import { IData, ITableItems } from "../types/interfaces";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const Table = () => {
   const tableItems: ITableItems = {
@@ -17,15 +18,18 @@ const Table = () => {
     address: "address",
   };
   const [data, setData] = useState<IData>();
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function fetchData(endpoint?: string | null) {
+    setIsLoading(true);
     try {
       const result = await getTable(endpoint || "/api/table/");
       setData(result);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -34,10 +38,14 @@ const Table = () => {
 
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200">
-        <THead tableItems={tableItems} />
-        <TBody data={data} tableItems={tableItems} />
-      </table>
+      {isLoading ? (
+        <Preloader />
+      ) : (
+        <table className="min-w-full divide-y divide-gray-200">
+          <THead tableItems={tableItems} />
+          <TBody data={data} tableItems={tableItems} />
+        </table>
+      )}
 
       <div className="flex justify-center mt-4">
         {data?.previous && (
@@ -72,7 +80,6 @@ const Table = () => {
         )}
       </div>
       <ToastContainer position="top-right" autoClose={5000} />
-
     </div>
   );
 };

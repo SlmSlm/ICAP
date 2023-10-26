@@ -8,6 +8,7 @@ import { logIn } from "../api/api";
 import { IErrors } from "../types/interfaces";
 import { validateInput } from "../utils/inputValidator";
 import Input from "./Input";
+import Preloader from "./Preloader/Preloader";
 
 export interface IForm {
   username: string;
@@ -19,6 +20,7 @@ export default function Login() {
 
   const [form, setForm] = useState<IForm>({ username: "", password: "" });
   const [errors, setErrors] = useState<IErrors>({ username: "", password: "" });
+  const [isLoading, setIsLoading] = useState(false);
 
   const hasErrors = Object.values(form).some(
     (field) => field === "" || field === null || field === undefined
@@ -30,11 +32,8 @@ export default function Login() {
   };
 
   const signIn = async (e: React.FormEvent<HTMLFormElement>) => {
+    setIsLoading(true);
     e.preventDefault();
-    // default:{
-    //   "username": "testuser",
-    //   "password": "testpassword123"
-    // }
 
     if (!hasErrors) {
       try {
@@ -44,6 +43,7 @@ export default function Login() {
         throw e;
       }
     }
+    setIsLoading(false);
   };
 
   return (
@@ -75,17 +75,21 @@ export default function Login() {
             ))}
 
             <div>
-              <button
-                disabled={hasErrors}
-                type="submit"
-                className={`flex w-full justify-center rounded-md py-2 text-sm font-semibold leading-6 text-white shadow-sm ${
-                  hasErrors
-                    ? "bg-indigo-600 bg-opacity-50 text-opacity-50 cursor-not-allowed"
-                    : "bg-indigo-600 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                }`}
-              >
-                Sign in
-              </button>
+              {isLoading ? (
+                <Preloader />
+              ) : (
+                <button
+                  disabled={hasErrors}
+                  type="submit"
+                  className={`flex w-full justify-center rounded-md py-2 text-sm font-semibold leading-6 text-white shadow-sm ${
+                    hasErrors
+                      ? "bg-indigo-600 bg-opacity-50 text-opacity-50 cursor-not-allowed"
+                      : "bg-indigo-600 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  }`}
+                >
+                  Sign in
+                </button>
+              )}
             </div>
           </form>
         </div>
