@@ -41,9 +41,10 @@ export default function Login() {
         router.push("/table");
       } catch (e) {
         throw e;
+      } finally {
+        setIsLoading(false);
       }
     }
-    setIsLoading(false);
   };
 
   return (
