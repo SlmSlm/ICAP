@@ -5,6 +5,8 @@ import { getTable } from "../api/api";
 import TBody from "../components/Table/TBody";
 import THead from "../components/Table/THead";
 import { IData, ITableItems } from "../types/interfaces";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Table = () => {
   const tableItems: ITableItems = {
@@ -69,6 +71,8 @@ const Table = () => {
           </button>
         )}
       </div>
+      <ToastContainer position="top-right" autoClose={5000} />
+
     </div>
   );
 };

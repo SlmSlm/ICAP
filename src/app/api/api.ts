@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { IForm } from "../components/Login";
 import { IDataItem } from "../types/interfaces";
+import { log } from "console";
 
 const BASE_URL: string = "https://technical-task-api.icapgroupgmbh.com";
 
@@ -26,6 +27,12 @@ export const patchTable = async (
     const response: AxiosResponse<any> = await api.patch(endpoint, body);
     return response.data;
   } catch (error: any) {
+    const errors = error.response.data;
+    Object.keys(errors).map((key) => {
+      errors[key].map((errorMessage: string) => {
+        toast.error(errorMessage);
+      });
+    });
     throw error;
   }
 };
